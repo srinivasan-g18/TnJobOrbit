@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Notes | TnJobOrbit{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+  <div class="section-title"><div><h2>Notes & PDFs</h2><p>Search, save and download study notes.</p></div></div>
+  <form class="searchbar">
+    <input name="q" value="{{ q }}" placeholder="Search notes, subjects...">
+    <select name="category"><option value="">All categories</option>{% for c in categories %}<option {% if selected_category==c.name %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select>
+    <button class="btn btn-blue">Search</button>
+  </form>
+  <div class="grid">
+    {% for note in notes %}
+    <article class="card">
+      <span class="chip">{{ note.category or "Notes" }}</span>
+      <h3>{{ note.title }}</h3>
+      <div class="muted">{{ note.subject }}</div>
+      <p class="small">{{ note.description }}</p>
+      <div class="actions">
+        {% if note.filename %}<a class="btn btn-blue btn-small" href="{{ url_for('download',kind='notes',item_id=note.id) }}">Download PDF</a>{% endif %}
+        <button class="btn btn-light btn-small" data-bookmark="note-{{ note.id }}">☆ Save</button>
+      </div>
+      <div class="small muted" style="margin-top:8px">{{ note.created_at }}</div>
+    </article>
+    {% else %}<div class="empty">No notes found.</div>{% endfor %}
+  </div>
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Study Materials | TnJobOrbit{% endblock %}
+{% block content %}
+<section class="section"><div class="container">
+<div class="section-title"><div><h2>Study Materials</h2><p>Resources uploaded by TnJobOrbit Admin.</p></div></div>
+<div class="grid">
+{% for item in materials %}
+<div class="card"><span class="chip">{{ item.category or "Material" }}</span><h3>{{ item.title }}</h3><p class="muted">{{ item.description }}</p>{% if item.filename %}<a class="btn btn-blue btn-small" href="{{ url_for('download',kind='materials',item_id=item.id) }}">Download</a>{% endif %}</div>
+{% else %}<div class="empty">No study materials available yet.</div>{% endfor %}
+</div>
+</div></section>
+{% endblock %}

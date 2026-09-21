@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% block title %}Manage Notes | Admin{% endblock %}
+{% block admin_content %}
+<h2>Notes & PDFs</h2>
+<div class="card">
+<form method="post" enctype="multipart/form-data">
+<div class="two"><div><label>Title *</label><input name="title" required></div><div><label>Subject</label><input name="subject"></div></div>
+<div class="two"><div><label>Category</label><select name="category"><option value="">Select</option>{% for c in categories %}<option>{{ c.name }}</option>{% endfor %}</select></div><div><label>File</label><input name="file" type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.webp,.xls,.xlsx,.ppt,.pptx"></div></div>
+<label>Description</label><textarea name="description"></textarea>
+<div class="two"><div><label>Status</label><select name="status"><option value="published">Published</option><option value="unpublished">Unpublished</option></select></div><div style="display:flex;align-items:end"><button class="btn btn-blue">Upload Note</button></div></div>
+</form>
+</div>
+<h3 style="margin-top:30px">All Notes</h3>
+<div class="table-wrap"><table><tr><th>Title</th><th>Category</th><th>File</th><th>Status</th><th>Actions</th></tr>
+{% for x in notes %}<tr><td>{{ x.title }}<br><span class="muted">{{ x.subject }}</span></td><td>{{ x.category }}</td><td>{{ x.original_filename or "No file" }}</td><td>{{ x.status }}</td><td><form style="display:inline" method="post" action="{{ url_for('admin_note_toggle',item_id=x.id) }}"><button class="btn btn-light btn-small">Toggle</button></form> <form style="display:inline" method="post" action="{{ url_for('admin_note_delete',item_id=x.id) }}" onsubmit="return confirm('Permanently delete this note and file?')"><button class="btn btn-danger btn-small">Delete</button></form></td></tr>{% endfor %}
+</table></div>
+{% endblock %}

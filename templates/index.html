@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}TnJobOrbit | Jobs • Skills • Your Future{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="badge">Tamil Nadu Jobs & Exam Preparation</span>
+      <h1>Your Gateway to <span class="gradient">Government Jobs</span> & Exam Preparation</h1>
+      <div class="slogan">வேலை • திறன் • உங்கள் எதிர்காலம்</div>
+      <p>தமிழ்நாடு அரசு வேலைகள், தேர்வு குறிப்புகள், மாதிரி தேர்வுகள் மற்றும் பயனுள்ள படிப்பு வளங்கள் — அனைத்தும் ஒரே இடத்தில்.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="{{ url_for('jobs') }}">Explore Jobs →</a>
+        <a class="btn btn-orange" href="{{ url_for('tests') }}">Start Test ✦</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="TnJobOrbit">
+      <div class="card" style="margin-top:12px">
+        <strong>One platform. More preparation. More opportunities.</strong>
+        <div class="muted small">Notes • Tests • Jobs • Study Materials</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-title"><div><h2>Explore TnJobOrbit</h2><p>Everything organized for your preparation.</p></div></div>
+    <div class="grid">
+      {% set features = [
+        ("🏛","Government Jobs","Latest recruitment information and official links.", url_for('jobs')),
+        ("📚","Notes","Subject-wise notes and downloadable PDFs.", url_for('notes')),
+        ("📝","Mock Tests","Practice tests with instant scoring.", url_for('tests')),
+        ("📄","Study Materials","Useful resources collected in one place.", url_for('materials')),
+        ("📋","Previous Questions","Previous-year papers and practice resources.", url_for('previous_questions')),
+        ("🔗","Important Links","Useful official recruitment and exam links.", url_for('important_links'))
+      ] %}
+      {% for icon,title,desc,link in features %}
+      <a class="card feature-card" href="{{ link }}">
+        <div class="icon">{{ icon }}</div><h3>{{ title }}</h3><p class="muted">{{ desc }}</p>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:10px">
+  <div class="container">
+    <div class="section-title">
+      <div><h2>Latest Government Jobs</h2><p>Newly added opportunities.</p></div>
+      <a class="btn btn-light" href="{{ url_for('jobs') }}">View All</a>
+    </div>
+    <div class="grid">
+      {% for job in jobs %}
+      <div class="card">
+        <span class="chip">{{ job.category or "Government Job" }}</span>
+        <h3>{{ job.title }}</h3>
+        <p class="muted">{{ job.organization }}</p>
+        <p class="small">{{ job.description|truncate(120) }}</p>
+        <a class="btn btn-blue btn-small" href="{{ job.official_url or url_for('jobs') }}" {% if job.official_url %}target="_blank" rel="noopener"{% endif %}>View Details</a>
+      </div>
+      {% else %}<div class="empty">No jobs published yet. Admin can add the first update.</div>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:10px">
+  <div class="container">
+    <div class="section-title">
+      <div><h2>Latest Notes</h2><p>Keep adding resources — older content stays available.</p></div>
+      <a class="btn btn-light" href="{{ url_for('notes') }}">View All</a>
+    </div>
+    <div class="grid">
+      {% for note in notes %}
+      <div class="card">
+        <span class="chip">{{ note.category or "Notes" }}</span>
+        <h3>{{ note.title }}</h3>
+        <p class="muted">{{ note.subject }}</p>
+        <p class="small">{{ note.description|truncate(100) }}</p>
+        <div class="actions">
+          {% if note.filename %}<a class="btn btn-blue btn-small" href="{{ url_for('download',kind='notes',item_id=note.id) }}">Download</a>{% endif %}
+          <button class="btn btn-light btn-small" data-bookmark="note-{{ note.id }}">☆ Save</button>
+        </div>
+      </div>
+      {% else %}<div class="empty">No notes uploaded yet.</div>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:10px">
+  <div class="container">
+    <div class="section-title">
+      <div><h2>Practice Tests</h2><p>Attempt and review your score.</p></div>
+      <a class="btn btn-light" href="{{ url_for('tests') }}">View All</a>
+    </div>
+    <div class="grid">
+      {% for test in tests %}
+      <div class="card">
+        <span class="chip">{{ test.category or "Mock Test" }}</span>
+        <h3>{{ test.title }}</h3>
+        <p class="muted">{{ test.subject }} • {{ test.duration_minutes }} min • {{ test.difficulty }}</p>
+        <a class="btn btn-orange btn-small" href="{{ url_for('take_test',test_id=test.id) }}">Start Test</a>
+      </div>
+      {% else %}<div class="empty">No tests created yet.</div>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

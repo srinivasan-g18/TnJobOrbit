@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ test.title }} | TnJobOrbit{% endblock %}
+{% block content %}
+<section class="section"><div class="container">
+<div class="card">
+  <span class="chip">{{ test.category }}</span>
+  <h1>{{ test.title }}</h1>
+  <p class="muted">{{ test.subject }} • {{ test.duration_minutes }} minutes • {{ test.difficulty }}</p>
+  <div id="timer" class="chip">Time: {{ test.duration_minutes }}:00</div>
+</div>
+<form id="testForm" style="margin-top:18px">
+{% for q in questions %}
+<div class="card" style="margin-bottom:14px" data-question="{{ q.id }}">
+  <strong>Q{{ loop.index }}. {{ q.question_text }}</strong>
+  {% for letter,text in [('A',q.option_a),('B',q.option_b),('C',q.option_c),('D',q.option_d)] %}
+  <label class="test-option"><input type="radio" name="q{{ q.id }}" value="{{ letter }}"> <strong>{{ letter }}.</strong> {{ text }}</label>
+  {% endfor %}
+</div>
+{% else %}<div class="empty">This test has no questions yet.</div>{% endfor %}
+{% if questions %}<button class="btn btn-primary" type="submit">Submit Test</button>{% endif %}
+</form>
+<div id="result" class="result-box" hidden></div>
+</div></section>
+{% endblock %}
+{% block scripts %}
+<script>
+(() => {
+  const testId = {{ test.id }};
+  const duration = {{ test.duration_minutes }} * 60;
+  let remaining = duration;
+  const timer = document.getElementById("timer");
+  const form = document.getElementById("testForm");
+  const result = document.getElementById("result");
+
+  function tick(){
+    const m = Math.floor(remaining/60), s = remaining%60;
+    timer.textContent = `Time: ${m}:${String(s).padStart(2,"0")}`;
+    if(remaining <= 0){ submitTest(); return; }
+    remaining--;
+  }
+  const interval = setInterval(tick,1000); tick();
+
+  async function submitTest(e){
+    if(e) e.preventDefault();
+    clearInterval(interval);
+    const answers = {};
+    document.querySelectorAll("[data-question]").forEach(card => {
+      const id = card.dataset.question;
+      const checked = card.querySelector("input:checked");
+      if(checked) answers[id] = checked.value;
+    });
+    const response = await fetch(`/api/test/${testId}/submit`, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({answers})
+    });
+    const data = await response.json();
+    if(data.error){ alert(data.error); return; }
+    const history = JSON.parse(localStorage.getItem("tnjoborbit_test_history") || "[]");
+    history.unshift({testId, title:{{ test.title|tojson }}, score:data.score, percentage:data.percentage, at:new Date().toISOString()});
+    localStorage.setItem("tnjoborbit_test_history", JSON.stringify(history.slice(0,50)));
+    result.hidden = false;
+    result.innerHTML = `
+      <div class="score">${data.score} / ${data.max_score}</div>
+      <h2>Test Completed</h2>
+      <p><strong>${data.percentage}%</strong> • Correct: ${data.correct} • Incorrect: ${data.incorrect} • Unanswered: ${data.unanswered}</p>
+      <h3>Answer Review</h3>
+      ${data.details.map((d,i)=>`<div class="card" style="margin:8px 0"><strong>Question ${i+1}</strong> — ${d.result}<br>Correct: ${d.correct}${d.selected ? ` • Your answer: ${d.selected}` : ""}${d.explanation ? `<p class="muted">${d.explanation}</p>` : ""}</div>`).join("")}
+    `;
+    form.querySelectorAll("input,button").forEach(x => x.disabled = true);
+    result.scrollIntoView({behavior:"smooth"});
+  }
+  form.addEventListener("submit", submitTest);
+})();
+</script>
+{% endblock %}

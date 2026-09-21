@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Mock Tests | TnJobOrbit{% endblock %}
+{% block content %}
+<section class="section"><div class="container">
+<div class="section-title"><div><h2>Mock Tests</h2><p>Practice, submit and review your performance.</p></div></div>
+<div class="grid">
+{% for test in tests %}
+<div class="card">
+<span class="chip">{{ test.category or "Test" }}</span>
+<h3>{{ test.title }}</h3>
+<p class="muted">{{ test.subject }} • {{ test.duration_minutes }} minutes • {{ test.difficulty }}</p>
+<p class="small">{{ test.description }}</p>
+<a class="btn btn-orange" href="{{ url_for('take_test',test_id=test.id) }}">Start Test →</a>
+</div>
+{% else %}<div class="empty">No tests available yet.</div>{% endfor %}
+</div>
+</div></section>
+{% endblock %}

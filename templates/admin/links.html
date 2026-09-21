@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% block title %}Important Links | Admin{% endblock %}
+{% block admin_content %}
+<h2>Important Links</h2>
+<div class="card"><form method="post">
+<div class="two"><div><label>Title *</label><input name="title" required></div><div><label>Category</label><input name="category"></div></div>
+<label>URL *</label><input name="url" type="url" required>
+<label>Description</label><textarea name="description"></textarea>
+<button class="btn btn-blue">Add Link</button>
+</form></div>
+<h3 style="margin-top:30px">All Links</h3><div class="table-wrap"><table><tr><th>Title</th><th>URL</th><th>Action</th></tr>
+{% for x in links %}<tr><td>{{ x.title }}</td><td>{{ x.url }}</td><td><form method="post" action="{{ url_for('admin_link_delete',item_id=x.id) }}" onsubmit="return confirm('Delete?')"><button class="btn btn-danger btn-small">Delete</button></form></td></tr>{% endfor %}
+</table></div>
+{% endblock %}

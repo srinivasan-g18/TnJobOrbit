@@ -1,0 +1,11 @@
+{% extends "admin/base.html" %}
+{% block title %}Categories | Admin{% endblock %}
+{% block admin_content %}
+<h2>Categories</h2>
+<div class="card">
+<form method="post" class="two"><div><label>New category</label><input name="name" required></div><div style="display:flex;align-items:end"><button class="btn btn-blue">Add Category</button></div></form>
+</div>
+<div class="table-wrap" style="margin-top:18px"><table><tr><th>Name</th><th>Action</th></tr>
+{% for c in categories %}<tr><td>{{ c.name }}</td><td><form method="post" action="{{ url_for('admin_category_delete',category_id=c.id) }}" onsubmit="return confirm('Delete this category?')"><button class="btn btn-danger btn-small">Delete</button></form></td></tr>{% endfor %}
+</table></div>
+{% endblock %}

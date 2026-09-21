@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+{% block title %}Manage Jobs | Admin{% endblock %}
+{% block admin_content %}
+<h2>Government Jobs</h2>
+<div class="card">
+<form method="post">
+<div class="two"><div><label>Job title *</label><input name="title" required></div><div><label>Organization</label><input name="organization"></div></div>
+<div class="two"><div><label>Category</label><select name="category"><option value="">Select</option>{% for c in categories %}<option>{{ c.name }}</option>{% endfor %}</select></div><div><label>Official URL</label><input name="official_url" type="url"></div></div>
+<label>Description</label><textarea name="description"></textarea>
+<label>Eligibility</label><textarea name="eligibility"></textarea>
+<label>Important dates</label><textarea name="important_dates"></textarea>
+<div class="two"><div><label>Status</label><select name="status"><option value="published">Published</option><option value="unpublished">Unpublished</option></select></div><div style="display:flex;align-items:end"><button class="btn btn-blue">Publish Job</button></div></div>
+</form>
+</div>
+<h3 style="margin-top:30px">All Jobs</h3>
+<div class="table-wrap"><table><tr><th>Job</th><th>Category</th><th>Status</th><th>Actions</th></tr>
+{% for x in jobs %}<tr><td><strong>{{ x.title }}</strong><br><span class="muted">{{ x.organization }}</span></td><td>{{ x.category }}</td><td>{{ x.status }}</td><td><form style="display:inline" method="post" action="{{ url_for('admin_job_toggle',item_id=x.id) }}"><button class="btn btn-light btn-small">Toggle</button></form> <form style="display:inline" method="post" action="{{ url_for('admin_job_delete',item_id=x.id) }}" onsubmit="return confirm('Permanently delete this job?')"><button class="btn btn-danger btn-small">Delete</button></form></td></tr>{% endfor %}
+</table></div>
+{% endblock %}

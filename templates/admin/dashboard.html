@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% block title %}Admin Dashboard | TnJobOrbit{% endblock %}
+{% block admin_content %}
+<div class="section-title"><div><h2>Admin Dashboard</h2><p>Manage all TnJobOrbit master content from one place.</p></div></div>
+<div class="stat-grid">
+{% for key,label in [('jobs','Jobs'),('notes','Notes'),('tests','Tests'),('materials','Materials'),('previous','Previous Qs'),('links','Links')] %}
+<div class="stat"><strong>{{ counts[key] }}</strong><span class="muted">{{ label }}</span></div>
+{% endfor %}
+</div>
+<div class="actions" style="margin:20px 0">
+<a class="btn btn-primary" href="{{ url_for('admin_notes') }}">+ Upload Note</a>
+<a class="btn btn-orange" href="{{ url_for('admin_tests') }}">+ Create Test</a>
+<a class="btn btn-blue" href="{{ url_for('admin_jobs') }}">+ Add Job</a>
+</div>
+<div class="grid">
+<div class="card"><h3>Latest Jobs</h3>{% for x in recent_jobs %}<p class="small">{{ x.title }} <span class="chip">{{ x.status }}</span></p>{% else %}<p class="muted">None yet.</p>{% endfor %}</div>
+<div class="card"><h3>Latest Notes</h3>{% for x in recent_notes %}<p class="small">{{ x.title }} <span class="chip">{{ x.status }}</span></p>{% else %}<p class="muted">None yet.</p>{% endfor %}</div>
+<div class="card"><h3>Latest Tests</h3>{% for x in recent_tests %}<p class="small">{{ x.title }} <span class="chip">{{ x.status }}</span></p>{% else %}<p class="muted">None yet.</p>{% endfor %}</div>
+</div>
+{% endblock %}

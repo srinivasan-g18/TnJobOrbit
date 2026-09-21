@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Important Links | TnJobOrbit{% endblock %}
+{% block content %}
+<section class="section"><div class="container">
+<div class="section-title"><div><h2>Important Links</h2><p>Useful official and exam-related websites.</p></div></div>
+<div class="list">
+{% for item in links %}
+<div class="card item"><div><span class="chip">{{ item.category or "Link" }}</span><h3>{{ item.title }}</h3><p class="muted">{{ item.description }}</p></div><a class="btn btn-blue btn-small" href="{{ item.url }}" target="_blank" rel="noopener">Open ↗</a></div>
+{% else %}<div class="empty">No links added yet.</div>{% endfor %}
+</div>
+</div></section>
+{% endblock %}

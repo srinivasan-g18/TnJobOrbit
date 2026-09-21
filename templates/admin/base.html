@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-layout">
+  <aside class="admin-side">
+    <h2>Admin</h2>
+    <div class="muted" style="color:#bfdbfe;margin-bottom:15px">{{ session.admin_username }}</div>
+    <div class="side-links">
+      <a href="{{ url_for('admin_dashboard') }}">▦ Dashboard</a>
+      <a href="{{ url_for('admin_jobs') }}">🏛 Jobs</a>
+      <a href="{{ url_for('admin_notes') }}">📚 Notes</a>
+      <a href="{{ url_for('admin_materials') }}">📄 Materials</a>
+      <a href="{{ url_for('admin_previous') }}">📋 Previous Qs</a>
+      <a href="{{ url_for('admin_tests') }}">📝 Tests</a>
+      <a href="{{ url_for('admin_categories') }}">🏷 Categories</a>
+      <a href="{{ url_for('admin_links') }}">🔗 Links</a>
+      <a href="{{ url_for('admin_password') }}">🔐 Change Password</a>
+      <a href="{{ url_for('admin_logout') }}">↪ Logout</a>
+    </div>
+  </aside>
+  <main class="admin-main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}<div class="flash flash-{{ category }}">{{ message }}</div>{% endfor %}
+    {% endwith %}
+    {% block admin_content %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

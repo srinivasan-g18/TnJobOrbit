@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Government Jobs | TnJobOrbit{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+  <div class="section-title"><div><h2>Government Jobs</h2><p>Browse published recruitment information.</p></div></div>
+  <form class="searchbar">
+    <input name="q" value="{{ q }}" placeholder="Search jobs, organizations...">
+    <select name="category">
+      <option value="">All categories</option>
+      {% for c in categories %}<option {% if selected_category==c.name %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+    </select>
+    <button class="btn btn-blue" type="submit">Search</button>
+  </form>
+  <div class="list">
+    {% for job in jobs %}
+    <div class="card item">
+      <div class="item-main">
+        <span class="chip">{{ job.category or "Government Job" }}</span>
+        <h3>{{ job.title }}</h3>
+        <div class="muted">{{ job.organization }}</div>
+        {% if job.important_dates %}<div class="small"><strong>Important dates:</strong> {{ job.important_dates }}</div>{% endif %}
+        {% if job.eligibility %}<div class="small"><strong>Eligibility:</strong> {{ job.eligibility|truncate(180) }}</div>{% endif %}
+        {% if job.description %}<p class="small">{{ job.description|truncate(220) }}</p>{% endif %}
+      </div>
+      <div>
+        {% if job.official_url %}<a class="btn btn-blue btn-small" href="{{ job.official_url }}" target="_blank" rel="noopener">Official Link ↗</a>{% endif %}
+      </div>
+    </div>
+    {% else %}<div class="empty">No matching government jobs found.</div>{% endfor %}
+  </div>
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% block title %}Previous Questions | Admin{% endblock %}
+{% block admin_content %}
+<h2>Previous-Year Questions</h2>
+<div class="card"><form method="post" enctype="multipart/form-data">
+<div class="three"><div><label>Title *</label><input name="title" required></div><div><label>Category</label><select name="category"><option value="">Select</option>{% for c in categories %}<option>{{ c.name }}</option>{% endfor %}</select></div><div><label>Year</label><input name="year"></div></div>
+<label>File</label><input name="file" type="file" required>
+<label>Description</label><textarea name="description"></textarea>
+<button class="btn btn-blue">Upload Paper</button>
+</form></div>
+<h3 style="margin-top:30px">All Papers</h3><div class="table-wrap"><table><tr><th>Title</th><th>Category</th><th>Year</th><th>Action</th></tr>
+{% for x in questions %}<tr><td>{{ x.title }}</td><td>{{ x.category }}</td><td>{{ x.year }}</td><td><form method="post" action="{{ url_for('admin_previous_delete',item_id=x.id) }}" onsubmit="return confirm('Delete?')"><button class="btn btn-danger btn-small">Delete</button></form></td></tr>{% endfor %}
+</table></div>
+{% endblock %}

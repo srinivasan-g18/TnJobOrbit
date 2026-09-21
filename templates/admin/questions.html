@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+{% block title %}Questions | Admin{% endblock %}
+{% block admin_content %}
+<h2>{{ test.title }}</h2>
+<p class="muted">{{ test.category }} • {{ test.subject }} • {{ test.duration_minutes }} minutes</p>
+<div class="card"><form method="post">
+<label>Question *</label><textarea name="question_text" required></textarea>
+<div class="two"><div><label>Option A *</label><input name="option_a" required></div><div><label>Option B *</label><input name="option_b" required></div></div>
+<div class="two"><div><label>Option C *</label><input name="option_c" required></div><div><label>Option D *</label><input name="option_d" required></div></div>
+<div class="three"><div><label>Correct option</label><select name="correct_option"><option>A</option><option>B</option><option>C</option><option>D</option></select></div><div><label>Order</label><input name="question_order" type="number" value="0"></div><div></div></div>
+<label>Explanation</label><textarea name="explanation"></textarea>
+<button class="btn btn-blue">Add Question</button>
+</form></div>
+<h3 style="margin-top:30px">Questions</h3>
+{% for q in questions %}
+<div class="card" style="margin-bottom:10px">
+<strong>Q{{ loop.index }}. {{ q.question_text }}</strong>
+<p class="small">A. {{ q.option_a }} | B. {{ q.option_b }} | C. {{ q.option_c }} | D. {{ q.option_d }}</p>
+<p class="small"><strong>Correct: {{ q.correct_option }}</strong>{% if q.explanation %} — {{ q.explanation }}{% endif %}</p>
+<form method="post" action="{{ url_for('admin_question_delete',question_id=q.id) }}" onsubmit="return confirm('Delete this question?')"><button class="btn btn-danger btn-small">Delete</button></form>
+</div>
+{% else %}<div class="empty">No questions yet. Add questions above.</div>{% endfor %}
+{% endblock %}

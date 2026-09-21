@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Previous Questions | TnJobOrbit{% endblock %}
+{% block content %}
+<section class="section"><div class="container">
+<div class="section-title"><div><h2>Previous-Year Questions</h2><p>Practice from previous examination resources.</p></div></div>
+<div class="grid">
+{% for item in questions %}
+<div class="card"><span class="chip">{{ item.category or "Exam" }} {% if item.year %}• {{ item.year }}{% endif %}</span><h3>{{ item.title }}</h3><p class="muted">{{ item.description }}</p>{% if item.filename %}<a class="btn btn-blue btn-small" href="{{ url_for('download',kind='previous',item_id=item.id) }}">Download</a>{% endif %}</div>
+{% else %}<div class="empty">No previous-year papers available yet.</div>{% endfor %}
+</div>
+</div></section>
+{% endblock %}
